@@ -1,3 +1,19 @@
+#Build Files
+build/
+tools/
+lib/Windows/
+lib/Linux/
+
+#Run Files
+run/*
+!run/**.md
+
+#IDEs
+#VSCode
+.vscode/
+
+#C Stuff
+
 # Prerequisites
 *.d
 
