@@ -24,4 +24,5 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" = "windows" ]; then ./travis/install.win.sh; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./travis/install.linux.sh; fi
 
-script: make all && make clean && make libd && make clean && make test_debug && (cd run && ../travis/test_debug.sh) && make test && (cd run && ../build/test)
+# script: make all && make clean && make libd && make clean && make test_debug && (cd run && ../travis/test_debug.sh) && make test && (cd run && ../build/test)
+script: make printinfo
