@@ -1,0 +1,27 @@
+language: c
+os:
+  - linux
+  - windows
+compiler:
+  - clang
+  - gcc
+env:
+  matrix:
+    - CSTD=c99
+    - CSTD=gnu99
+matrix:
+  exclude:
+  - compiler: clang
+    env: CSTD=gnu99
+  - compiler: gcc
+    env: CSTD=c99
+  - compiler: clang
+    os: windows
+  allow_failures:
+  - compiler: clang
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then ./travis/install.win.sh; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./travis/install.linux.sh; fi
+
+script: make all && make clean && make libd && make clean && make test_debug && (cd run && ../travis/test_debug.sh) && make test && (cd run && ../build/test)
