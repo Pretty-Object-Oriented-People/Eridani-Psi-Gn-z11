@@ -1,3 +1,3 @@
 #!/bin/bash
 set -ev
-choco install make cmake gdb
+choco install make cmake
