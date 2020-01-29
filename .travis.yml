@@ -18,3 +18,4 @@ script:
   - cmake --version
   - make --version
   - gcc --version
+  - mkdir build && cd build && cmake .. -G "Unix Makefiles" && (cmake --build . --config Debug && ctest --output-on-failure)
