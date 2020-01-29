@@ -17,4 +17,4 @@ before_install:
 script:
   - cmake --version
   - make --version
-  - cmake -S . -B build && cd build && make && make test
+  - mkdir build && cd build && cmake .. && (cmake --build . --config Debug && ctest --output-on-failure)
