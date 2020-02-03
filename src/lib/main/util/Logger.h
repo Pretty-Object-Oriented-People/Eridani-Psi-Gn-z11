@@ -30,8 +30,6 @@
 
 //Settings
 
-#ifndef LOGGER_FORMAT
-
 #ifndef LOGGER_NAME
 #define LOGGER_NAME "Random Logger"
 #endif
@@ -40,17 +38,17 @@
 #define LOGGER_TIMEFMT "%d.%d.%d %d:%d:%d"
 #endif
 
+#ifndef LOGGER_FORMAT
 #define LOGGER_FORMAT(info) "[" LOGGER_NAME "][" LOGGER_TIMEFMT "] " info
 #endif
 
 //VA Settings
 
-#ifndef LOGGER_FORMAT_VA
-
 #ifndef LOGGER_TIMEFMTARGS
 #define LOGGER_TIMEFMTARGS(ttm) ttm->tm_mday, ttm->tm_mon+1, ttm->tm_year+1900, ttm->tm_hour, ttm->tm_min, ttm->tm_sec
 #endif
 
+#ifndef LOGGER_FORMAT_VA
 #define LOGGER_FORMAT_VA(ttm, ...) LOGGER_TIMEFMTARGS(_lt), ##__VA_ARGS__
 #endif
 
