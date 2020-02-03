@@ -1,12 +1,7 @@
-#Build Files
-build/
-tools/
-lib/Windows/
-lib/Linux/
-
-#Run Files
-run/*
-!run/**.md
+#CMake
+/build/
+/bin/
+/lib/
 
 #IDEs
 #VSCode
