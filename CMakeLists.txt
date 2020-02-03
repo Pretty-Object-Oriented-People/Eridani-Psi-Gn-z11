@@ -4,8 +4,10 @@ project(Eridani VERSION 0.0.1 DESCRIPTION "Eridani Organization Helper" LANGUAGE
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+set(DIR_TESTSFRAMEWORK ${CMAKE_CURRENT_SOURCE_DIR}/src/testsframework)
 set(DIR_LIB ${CMAKE_CURRENT_SOURCE_DIR}/src/lib)
 
+add_subdirectory(${DIR_TESTSFRAMEWORK})
 add_subdirectory(${DIR_LIB})
 
 enable_testing()
