@@ -95,4 +95,4 @@ typedef const char* String;
 	double: "%f", \
 	long double: "%Lf", \
 	char *: "%s", \
-	void *: "%p")\
+	void *: "%p")
