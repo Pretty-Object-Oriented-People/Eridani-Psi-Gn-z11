@@ -1,7 +1,7 @@
 set(LIBS ${LIBS} Eridani-Testing-Framework)
 set(LIBS ${LIBS} Eridani-Lib)
 
-file(GLOB SOURCES "*.h" "*.c")
+file(GLOB_RECURSE SOURCES "*.h" "*.c")
 add_executable(Eridani-Lib-Test ${SOURCES})
 target_link_libraries(Eridani-Lib-Test ${LIBS})
 
