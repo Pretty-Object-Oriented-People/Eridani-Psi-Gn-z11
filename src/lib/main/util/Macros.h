@@ -39,7 +39,7 @@ typedef const char* String;
 #define dapproxeq(a,b) dapproxeqd(a,b,1E-5)
 #define drat(a,b) ({ let __a = (a); let __b = (b); absm(__a) > absm(__b) ? __a/__b : __b/__a; })
 
-#define rescale(n, a,b, c,d) ({\
+#define lerp2(n, a,b, c,d) ({\
 		let _n = (n); \
 		let _a = (a); \
 		let _b = (b); \
@@ -48,8 +48,8 @@ typedef const char* String;
 		_c + (_d-_c)*(_n-_a)/(_b-_a); \
 	})
 
-#define lerp(n, a,b) rescale(n, 0, 1, a, b)
-#define delerp(n, a,b) rescale(n, a, b, 0, 1)
+#define lerp(n, a,b) lerp2(n, 0, 1, a, b)
+#define delerp(n, a,b) lerp2(n, a, b, 0, 1)
 
 #define printf_fmt(x) _Generic((x), \
 	char: "%c", \
