@@ -1,4 +1,6 @@
+#include <UnitTest.h>
+#include <ComposedUnitTest.h>
+#include <TestSuiteMain.h>
 
-void testingFrameworkSuperSecretFunction(){
-	//Hi!
-}
+int TestS_Depth = 0;
+String currentlyRunningTest = "NONE";
