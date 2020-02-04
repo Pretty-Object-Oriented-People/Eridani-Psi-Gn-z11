@@ -10,7 +10,7 @@ extern int TestS_Depth;
 	currentlyRunningTest = testname; \
 	logInfo("Testing: %s...", testname); \
 	TestS_Depth++; \
-	bool t_res = testf; \
+	bool t_res = testf(); \
 	TestS_Depth--; \
 	if(t_res) logInfo("OK."); \
 	else logError("Fail."); \

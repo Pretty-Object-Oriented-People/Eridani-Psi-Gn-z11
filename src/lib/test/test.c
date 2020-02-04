@@ -12,4 +12,4 @@ testBegin(testSum0To5)
 	assertNumDEqual(1+2+3+4+5, sum0To5());
 testEnd()
 
-testsMainAll((testSquare(), "Test Square"), (testSum0To5(), "Test Sum 0 to 5"))
+testsMainAll((testSquare, "Test Square"), (testSum0To5, "Test Sum 0 to 5"))
