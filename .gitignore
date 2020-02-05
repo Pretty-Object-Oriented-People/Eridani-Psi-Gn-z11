@@ -2,6 +2,7 @@
 /build/
 /bin/
 /lib/
+!/lib/Windows/
 
 #IDEs
 #VSCode

@@ -1,5 +1,6 @@
 set(LIBS ${LIBS} Eridani-Testing-Framework)
 set(LIBS ${LIBS} Eridani-Lib)
+set(LIBS ${LIBS} json-c)
 
 file(GLOB_RECURSE SOURCES "*.h" "*.c")
 add_executable(Eridani-Lib-Test ${SOURCES})
