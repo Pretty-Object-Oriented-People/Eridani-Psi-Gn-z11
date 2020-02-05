@@ -27,9 +27,7 @@ bool fname(){ \
 #define compoTestSubTest(testf, testname) \
 	_b &= subTest(testf, testname);
 
-#define CTSTH_UP1(a, b) a
-#define CTSTH_UP2(a, b) b
-#define compoTestSubTestPacked(x) compoTestSubTest(CTSTH_UP1 x, CTSTH_UP2 x)
+#define compoTestSubTestPacked(arg) compoTestSubTest arg
 
 #define compoTestSubTestMany(...) \
 	FOREACH_ARG(compoTestSubTestPacked, __VA_ARGS__)
