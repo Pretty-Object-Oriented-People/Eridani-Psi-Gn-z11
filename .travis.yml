@@ -11,6 +11,7 @@ addons:
       - gcc
       - cmake
 before_install:
+  - mkdir build
   - if [ "$TRAVIS_OS_NAME" = "windows" ]; then ./travis/install.win.sh; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./travis/install.linux.sh; fi
 
@@ -18,4 +19,4 @@ script:
   - cmake --version
   - make --version
   - gcc --version
-  - mkdir build && cd build && cmake .. -G "Unix Makefiles" && (cmake --build . --config Debug && ctest --output-on-failure -V)
+  - cd build && cmake .. -G "Unix Makefiles" && (cmake --build . --config Debug && ctest --output-on-failure -V)
