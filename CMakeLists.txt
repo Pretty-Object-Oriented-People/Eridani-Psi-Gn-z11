@@ -7,6 +7,9 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(DIR_TESTSFRAMEWORK ${CMAKE_CURRENT_SOURCE_DIR}/src/testsframework)
 set(DIR_LIB ${CMAKE_CURRENT_SOURCE_DIR}/src/lib)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}lib/)
+
 add_subdirectory(${DIR_TESTSFRAMEWORK})
 add_subdirectory(${DIR_LIB})
 
