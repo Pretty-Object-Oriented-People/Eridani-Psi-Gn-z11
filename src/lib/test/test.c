@@ -3,6 +3,7 @@
 #include <json-c/json.h>
 #include <string.h>
 
+#include "Tests.h"
 #include <TestSuiteMain.h>
 
 testBegin(testSquare)
@@ -31,4 +32,4 @@ testBegin(testJsonC)
 	json_object_put(jsO);
 testEnd()
 
-testsMainAll((testSquare, "Test Square"), (testSum0To5, "Test Sum 0 to 5"))
+testsMainAll((testMacros, "Test Macros"), (testSquare, "Test Square"), (testSum0To5, "Test Sum 0 to 5"))
