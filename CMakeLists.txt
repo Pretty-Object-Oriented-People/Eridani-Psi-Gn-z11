@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(Eridani VERSION 0.0.1 DESCRIPTION "Eridani Organization Helper" LANGUAGES C)
+project(Eridani VERSION 0.0.1 DESCRIPTION "Eridani Organization Helper" LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
