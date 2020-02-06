@@ -25,8 +25,12 @@ struct MySolution {
 
 	string to_string() const
 	{
-		std::string str = "{ boxes: [";
-		for(let i = 0; i < BOXC; i++) str.append((i > 0 ? ", (" : "(") + std::to_string(boxPX[i]) + "," + std::to_string(boxPY[i]) + ")");
+		double minX, minY, maxX, maxY;
+		getBB(minX, minY, maxX, maxY);
+		std::string str = "{ ";
+		str += "aabb: (" + std::to_string(minX) + ", " + std::to_string(minY) + ") -> (" + std::to_string(maxX) + ", " + std::to_string(maxY) + ")";
+		str += ", boxes: [";
+		for(let i = 0; i < BOXC; i++) str.append((i > 0 ? ", (" : "(") + std::to_string(boxPX[i] - minX) + "," + std::to_string(boxPY[i] - minY) + ")");
 		return str + "] }";
 	}
 
