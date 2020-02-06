@@ -34,6 +34,15 @@ struct MySolution {
 	#define bbNotOverlap(x1, y1, sx1, sy1, x2, y2, sx2, sy2) (intervalNotOvelap(x1, sx1, x2, sx2) || intervalNotOvelap(y1, sy1, y2, sy2)) 
 	#define bbOverlap(b1i, b2i) !(bbNotOverlap(boxPX[b1i], boxPY[b1i], boxSX[b1i], boxSY[b1i], boxPX[b2i], boxPY[b2i], boxSX[b2i], boxSY[b2i]))
 
+	void getBB(double& minX, double& minY, double& maxX, double& maxY) const {
+		for(let i = 0; i < BOXC; i++){
+			minX = min(minX, boxPX[i]);
+			minY = min(minY, boxPY[i]);
+			maxX = max(maxX, boxPX[i] + boxSX[i]);
+			maxY = max(maxY, boxPY[i] + boxSY[i]);
+		}
+	}
+
 	bool checkValid() const {
 		for(let i = 0; i < BOXC; i++) for(let j = i+1; j < BOXC; j++) if(bbOverlap(i, j)) return false;
 		return true;
@@ -41,12 +50,7 @@ struct MySolution {
 
 	double bbArea() const {
 		double minX, minY, maxX, maxY;
-		for(let i = 0; i < BOXC; i++){
-			minX = min(minX, boxPX[i]);
-			minY = min(minY, boxPY[i]);
-			maxX = max(maxX, boxPX[i] + boxSX[i]);
-			maxY = max(maxY, boxPY[i] + boxSY[i]);
-		}
+		getBB(minX, minY, maxX, maxY);
 		return (maxX-minX)*(maxY-minY);
 	}
 
