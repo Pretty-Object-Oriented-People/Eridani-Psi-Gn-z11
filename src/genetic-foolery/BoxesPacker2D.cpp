@@ -44,9 +44,9 @@ struct MySolution {
 	}
 
 	bool checkValid() const {
-		double minX, minY, maxX, maxY;
+		/*double minX, minY, maxX, maxY;
 		getBB(minX, minY, maxX, maxY);
-		if(minX < 0 || maxX > containerW || minY < 0 || maxY > containerH) return false;
+		if(minX < 0 || maxX > containerW || minY < 0 || maxY > containerH) return false;*/
 		for(let i = 0; i < BOXC; i++) for(let j = i+1; j < BOXC; j++) if(bbOverlap(i, j)) return false;
 		return true;
 	}
