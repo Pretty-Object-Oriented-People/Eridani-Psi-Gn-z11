@@ -19,6 +19,7 @@ endif (UNIX)
 
 add_subdirectory(${DIR_TESTSFRAMEWORK})
 add_subdirectory(${DIR_LIB})
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/genetic-foolery)
 
 enable_testing()
 add_test(NAME LibTest COMMAND Eridani-Lib-Test)
