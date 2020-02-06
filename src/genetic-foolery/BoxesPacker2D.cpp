@@ -151,7 +151,7 @@ int main(){
 	ga_obj.idle_delay_us=1; // switch between threads quickly
 	ga_obj.dynamic_threading=true;
 	ga_obj.verbose=false;
-	ga_obj.population=200;
+	ga_obj.population=600;
 	ga_obj.generation_max=1000;
 	ga_obj.calculate_SO_total_fitness=calculate_SO_total_fitness;
 	ga_obj.init_genes=init_genes;
