@@ -11,40 +11,43 @@ using std::string;
 using std::cout;
 using std::endl;
 
-const double box1SX = 5;
-const double box1SY = 5;
-const double box2SX = 1;
-const double box2SY = 7;
-const double box3SX = 3;
-const double box3SY = 4;
+const int BOXC = 3;
+
+const double boxSX[BOXC] = {5, 1, 3}; 
+const double boxSY[BOXC] = {5, 7, 4}; 
 
 struct MySolution {
-	double box1X;
-	double box1Y;
-	double box2X;
-	double box2Y;
-	double box3X;
-	double box3Y;
-
-#define intervalNotOvelap(x1, sx1, x2, sx2) (x1 < x2+sx2 || x2 < x1+sx1)
-#define bbNotOverlap(x1, y1, sx1, sy1, x2, y2, sx2, sy2) (intervalNotOvelap(x1, sx1, x2, sx2) || intervalNotOvelap(y1, sy1, y2, sy2)) 
-
-	bool checkOverlap(){
-		return bbNotOverlap(box1X, box1SX, box1Y, box1SY, box2X, box2SX, box2Y, box2SY) && bbNotOverlap(box1X, box1SX, box1Y, box1SY, box3X, box3SX, box3Y, box3SY) && bbNotOverlap(box2X, box2SX, box2Y, box2SY, box3X, box3SX, box3Y, box3SY);
-	}
+	
+	double boxPX[BOXC];
+	double boxPY[BOXC];
 
 	string to_string() const
 	{
-		return 
-			string("{")
-			+  "box1X:"+std::to_string(box1X)
-			+", box1Y:"+std::to_string(box1Y)
-			+", box2X:"+std::to_string(box2X)
-			+", box2Y:"+std::to_string(box2Y)
-			+", box3X:"+std::to_string(box3X)
-			+", box3Y:"+std::to_string(box3Y)
-			+"}";
+		std::string str = "{ boxes: [";
+		for(let i = 0; i < BOXC; i++) str.append((i > 0 ? ", (" : "(") + std::to_string(boxPX[i]) + "," + std::to_string(boxPY[i]) + ")");
+		return str + "] }";
 	}
+
+	#define intervalNotOvelap(x1, sx1, x2, sx2) (x1 < x2+sx2 || x2 < x1+sx1)
+	#define bbNotOverlap(x1, y1, sx1, sy1, x2, y2, sx2, sy2) (intervalNotOvelap(x1, sx1, x2, sx2) || intervalNotOvelap(y1, sy1, y2, sy2)) 
+	#define bbOverlap(b1i, b2i) !(bbNotOverlap(boxPX[b1i], boxSX[b1i], boxPY[b1i], boxSY[b1i], boxPX[b2i], boxSX[b2i], boxPY[b2i], boxSY[b2i]))
+
+	bool checkValid() const {
+		for(let i = 0; i < BOXC; i++) for(let j = i+1; j < BOXC; j++) if(bbOverlap(i, j)) return false;
+		return true;
+	}
+
+	double bbArea() const {
+		double minX, minY, maxX, maxY;
+		for(let i = 0; i < BOXC; i++){
+			minX = min(minX, boxPX[i]);
+			minY = min(minY, boxPY[i]);
+			maxX = max(maxX, boxPX[i] + boxSX[i]);
+			maxY = max(maxY, boxPY[i] + boxSY[i]);
+		}
+		return (maxX-minX)*(maxY-minY);
+	}
+
 };
 
 struct MyMiddleCost {
@@ -58,24 +61,15 @@ typedef EA::GenerationType<MySolution,MyMiddleCost> Generation_Type;
 
 void init_genes(MySolution& p,const std::function<double(void)> &rnd01){
 	// rnd01() gives a random number in 0~1
-	p.box1X=0.0+10*rnd01();
-	p.box1Y=0.0+10*rnd01();
-	p.box2X=0.0+10*rnd01();
-	p.box2Y=0.0+10*rnd01();
-	p.box3X=0.0+10*rnd01();
-	p.box3Y=0.0+10*rnd01();
+	for(let i = 0; i < BOXC; i++){
+		p.boxPX[i] = 0.0+10*rnd01();
+		p.boxPY[i] = 0.0+10*rnd01();
+	}
 }
 
 bool eval_solution(const MySolution& p, MyMiddleCost &c){
-	const double& box1X=p.box1X;
-	const double& box1Y=p.box1Y;
-	const double& box2X=p.box2X;
-	const double& box2Y=p.box2Y;
-	const double& box3X=p.box3X;
-	const double& box3Y=p.box3Y;
-
-	c.areaBB=(max(box1X+box1SX, max(box2X+box2SX, box3X+box3SX)) - min(box1X, min(box2X, box3X))) * (max(box1Y+box1SY, max(box2Y+box2SY, box3Y+box3SY)) - min(box1Y, min(box2Y, box3Y)));
-	return true; // solution is accepted
+	c.areaBB = p.bbArea();
+	return p.checkValid();
 }
 
 MySolution mutate(const MySolution& X_base, const std::function<double(void)> &rnd01, double shrink_scale){
@@ -84,37 +78,23 @@ MySolution mutate(const MySolution& X_base, const std::function<double(void)> &r
 	do{
 		in_range=true;
 		X_new=X_base;
-		X_new.box1X+=0.2*(rnd01()-rnd01())*shrink_scale;
-		in_range=in_range&&(X_new.box1X>=0.0 && X_new.box1X<10.0);
-		X_new.box1Y+=0.2*(rnd01()-rnd01())*shrink_scale;
-		in_range=in_range&&(X_new.box1Y>=0.0 && X_new.box1Y<10.0);
-		X_new.box2X+=0.2*(rnd01()-rnd01())*shrink_scale;
-		in_range=in_range&&(X_new.box2X>=0.0 && X_new.box2X<10.0);
-		X_new.box2Y+=0.2*(rnd01()-rnd01())*shrink_scale;
-		in_range=in_range&&(X_new.box2Y>=0.0 && X_new.box2Y<10.0);
-		X_new.box3X+=0.2*(rnd01()-rnd01())*shrink_scale;
-		in_range=in_range&&(X_new.box3X>=0.0 && X_new.box3X<10.0);
-		X_new.box3Y+=0.2*(rnd01()-rnd01())*shrink_scale;
-		in_range=in_range&&(X_new.box3Y>=0.0 && X_new.box3Y<10.0);
+		for(let i = 0; i < BOXC; i++){
+			X_new.boxPX[i] = 0.2*(rnd01()-rnd01())*shrink_scale;
+			X_new.boxPY[i] = 0.2*(rnd01()-rnd01())*shrink_scale;
+			in_range &= X_new.boxPX[i] >= 0 && X_new.boxPX[i] < 10 && X_new.boxPY[i] >= 0 && X_new.boxPY[i] < 10;
+		}
 	} while(!in_range);
 	return X_new;
 }
 
 MySolution crossover(const MySolution& X1, const MySolution& X2, const std::function<double(void)> &rnd01){
 	MySolution X_new;
-	double r;
-	r=rnd01();
-	X_new.box1X=r*X1.box1X+(1.0-r)*X2.box1X;
-	r=rnd01();
-	X_new.box1Y=r*X1.box1Y+(1.0-r)*X2.box1Y;
-	r=rnd01();
-	X_new.box2X=r*X1.box2X+(1.0-r)*X2.box2X;
-	r=rnd01();
-	X_new.box2Y=r*X1.box2Y+(1.0-r)*X2.box2Y;
-	r=rnd01();
-	X_new.box3X=r*X1.box3X+(1.0-r)*X2.box3X;
-	r=rnd01();
-	X_new.box3Y=r*X1.box3Y+(1.0-r)*X2.box3Y;
+	for(let i = 0; i < BOXC; i++){
+		let rX = rnd01();
+		X_new.boxPX[i] = rX*X1.boxPX[i] + (1.0-rX)*X2.boxPX[i];
+		let rY = rnd01();
+		X_new.boxPY[i] = rY*X1.boxPY[i] + (1.0-rY)*X2.boxPY[i];
+	}
 	return X_new;
 }
 
