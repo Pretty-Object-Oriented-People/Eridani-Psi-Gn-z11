@@ -14,7 +14,9 @@ using std::endl;
 const int BOXC = 3;
 
 const double boxSX[BOXC] = {5, 1, 3}; 
-const double boxSY[BOXC] = {5, 7, 4}; 
+const double boxSY[BOXC] = {5, 7, 4};
+
+const double containerW = 10, containerH = 10;
 
 struct MySolution {
 	
@@ -62,8 +64,8 @@ typedef EA::GenerationType<MySolution,MyMiddleCost> Generation_Type;
 void init_genes(MySolution& p,const std::function<double(void)> &rnd01){
 	// rnd01() gives a random number in 0~1
 	for(let i = 0; i < BOXC; i++){
-		p.boxPX[i] = 0.0+10*rnd01();
-		p.boxPY[i] = 0.0+10*rnd01();
+		p.boxPX[i] = 0.0+containerW*rnd01();
+		p.boxPY[i] = 0.0+containerH*rnd01();
 	}
 }
 
@@ -81,7 +83,7 @@ MySolution mutate(const MySolution& X_base, const std::function<double(void)> &r
 		for(let i = 0; i < BOXC; i++){
 			X_new.boxPX[i] += 0.2*(rnd01()-rnd01())*shrink_scale;
 			X_new.boxPY[i] += 0.2*(rnd01()-rnd01())*shrink_scale;
-			in_range &= X_new.boxPX[i] >= 0 && X_new.boxPX[i] < 10 && X_new.boxPY[i] >= 0 && X_new.boxPY[i] < 10;
+			in_range &= X_new.boxPX[i] >= 0 && X_new.boxPX[i] < containerW && X_new.boxPY[i] >= 0 && X_new.boxPY[i] < containerH;
 		}
 	} while(!in_range);
 	return X_new;
