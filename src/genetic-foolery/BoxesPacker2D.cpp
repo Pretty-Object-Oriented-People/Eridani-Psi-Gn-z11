@@ -79,8 +79,8 @@ MySolution mutate(const MySolution& X_base, const std::function<double(void)> &r
 		in_range=true;
 		X_new=X_base;
 		for(let i = 0; i < BOXC; i++){
-			X_new.boxPX[i] = 0.2*(rnd01()-rnd01())*shrink_scale;
-			X_new.boxPY[i] = 0.2*(rnd01()-rnd01())*shrink_scale;
+			X_new.boxPX[i] += 0.2*(rnd01()-rnd01())*shrink_scale;
+			X_new.boxPY[i] += 0.2*(rnd01()-rnd01())*shrink_scale;
 			in_range &= X_new.boxPX[i] >= 0 && X_new.boxPX[i] < 10 && X_new.boxPY[i] >= 0 && X_new.boxPY[i] < 10;
 		}
 	} while(!in_range);
