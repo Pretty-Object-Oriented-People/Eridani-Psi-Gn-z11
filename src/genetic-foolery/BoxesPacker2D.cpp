@@ -141,7 +141,9 @@ int main(){
 
 	GA_Type ga_obj;
 	ga_obj.problem_mode=EA::GA_MODE::SOGA;
-	ga_obj.multi_threading=false;
+	ga_obj.multi_threading=true;
+	ga_obj.idle_delay_us=1; // switch between threads quickly
+	ga_obj.dynamic_threading=true;
 	ga_obj.verbose=false;
 	ga_obj.population=200;
 	ga_obj.generation_max=1000;
