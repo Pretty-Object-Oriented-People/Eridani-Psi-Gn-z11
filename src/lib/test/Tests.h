@@ -3,3 +3,5 @@
 #include <UnitTest.h>
 
 testDeclare(testMacros)
+
+testDeclare(testOpenGA)

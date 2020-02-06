@@ -32,4 +32,4 @@ testBegin(testJsonC)
 	json_object_put(jsO);
 testEnd()
 
-testsMainAll((testMacros, "Test Macros"), (testSquare, "Test Square"), (testSum0To5, "Test Sum 0 to 5"))
+testsMainAll((testMacros, "Test Macros"), (testOpenGA, "Test Open GA"), (testSquare, "Test Square"), (testSum0To5, "Test Sum 0 to 5"))
