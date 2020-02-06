@@ -35,6 +35,8 @@ struct MySolution {
 	#define bbOverlap(b1i, b2i) !(bbNotOverlap(boxPX[b1i], boxPY[b1i], boxSX[b1i], boxSY[b1i], boxPX[b2i], boxPY[b2i], boxSX[b2i], boxSY[b2i]))
 
 	void getBB(double& minX, double& minY, double& maxX, double& maxY) const {
+		minX = maxX = boxPX[0];
+		minY = maxY = boxPY[0];
 		for(let i = 0; i < BOXC; i++){
 			minX = min(minX, boxPX[i]);
 			minY = min(minY, boxPY[i]);
