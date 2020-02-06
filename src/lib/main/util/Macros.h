@@ -2,7 +2,11 @@
 
 //Types
 
+#ifdef __cplusplus
+#define let auto
+#else
 #define let __auto_type
+#endif
 typedef const char* String;
 
 //Variadic
@@ -24,24 +28,24 @@ typedef const char* String;
 #endif
 
 #define min(a,b) ({\
-	__auto_type _a = (a); \
-	__auto_type _b = (b); \
+	let _a = (a); \
+	let _b = (b); \
 	_a < _b ? _a : _b;\
 	})
 
 #define max(a,b) ({\
-	__auto_type _a = (a); \
-	__auto_type _b = (b); \
+	let _a = (a); \
+	let _b = (b); \
 	_a > _b ? _a : _b;\
 	})
 
 #define absm(a) ({\
-	__auto_type _a = (a); \
+	let _a = (a); \
 	_a < 0 ? -_a : _a; \
 	})
 
 #define swap(a,b) {\
-	__auto_type _t = a; \
+	let _t = a; \
 	a = b; \
 	b = _t; \
 	}
