@@ -11,10 +11,10 @@ using std::string;
 using std::cout;
 using std::endl;
 
-const int BOXC = 3;
+const int BOXC = 7;
 
-const double boxSX[BOXC] = {5, 1, 3}; 
-const double boxSY[BOXC] = {5, 7, 4};
+const double boxSX[BOXC] = {5, 1, 3, 2, 2, 3, 1}; 
+const double boxSY[BOXC] = {5, 7, 4, 2, 3, 2, 3};
 
 const double containerW = 10, containerH = 10;
 
