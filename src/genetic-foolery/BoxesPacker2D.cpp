@@ -28,9 +28,9 @@ struct MySolution {
 		return str + "] }";
 	}
 
-	#define intervalNotOvelap(x1, sx1, x2, sx2) (x1 < x2+sx2 || x2 < x1+sx1)
+	#define intervalNotOvelap(x1, sx1, x2, sx2) (x2+sx2 < x1 || x1+sx1 < x2)
 	#define bbNotOverlap(x1, y1, sx1, sy1, x2, y2, sx2, sy2) (intervalNotOvelap(x1, sx1, x2, sx2) || intervalNotOvelap(y1, sy1, y2, sy2)) 
-	#define bbOverlap(b1i, b2i) !(bbNotOverlap(boxPX[b1i], boxSX[b1i], boxPY[b1i], boxSY[b1i], boxPX[b2i], boxSX[b2i], boxPY[b2i], boxSY[b2i]))
+	#define bbOverlap(b1i, b2i) !(bbNotOverlap(boxPX[b1i], boxPY[b1i], boxSX[b1i], boxSY[b1i], boxPX[b2i], boxPY[b2i], boxSX[b2i], boxSY[b2i]))
 
 	bool checkValid() const {
 		for(let i = 0; i < BOXC; i++) for(let j = i+1; j < BOXC; j++) if(bbOverlap(i, j)) return false;
