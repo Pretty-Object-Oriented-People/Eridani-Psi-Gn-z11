@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.20/fabric.js"></script>
+
+    <!--<link rel="stylesheet" type="text/css" href="/css/result-light.css">-->
+
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.4/randomColor.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.0.3/nouislider.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.0.3/nouislider.min.css">
+
+  <style id="compiled-css" type="text/css">
+      #data-input {
+	resize: none;
+}
+
+#gen-sel {
+	width: 100ex;
+	height: 1em;
+	margin: 1em;
+	display: inline-block;
+}
+  </style>
+
+
+  <!-- TODO: Missing CoffeeScript 2 -->
+
+  <script type="text/javascript">//<![CDATA[
+
+    var VanillaRunOnDomReady = function() {
+      
+let canvas = new fabric.Canvas('best-drawer');
+
+let container = null
+let boxes = []
+let anims = []
+let cgen = 0
+const scale = 100;
+function initDrawer(json){
+	container = new fabric.Rect({
+		left: 0,
+		top: 0,
+		width: json.container.x * scale,
+		height: json.container.y * scale,
+		fill: 'darkgrey'
+	})
+	canvas.add(container)
+	boxes = []
+	for(let boxD of json.boxes){
+		let b = new fabric.Rect({
+			left: 0,
+			top: 0,
+			width: boxD.x * scale,
+			height: boxD.y * scale,
+			fill: randomColor({luminosity: 'light'})
+		})
+		canvas.add(b)
+		boxes.push(b)
+	}
+	canvas.renderAll()
+	anims = json.best_positions
+}
+function setDrawGeneration(gen){
+	if(gen < 0 || gen >= anims.length || cgen === gen) return;
+	cgen = gen
+	let frame = anims[cgen]
+	container.set({
+		width: frame.area.x * scale,
+		height: frame.area.y * scale
+	})
+	for(let i in boxes) boxes[i].set({
+		left: frame.boxes[i].x * scale,
+		top: frame.boxes[i].y * scale,
+	})
+	canvas.renderAll()
+}
+
+let genSlider = document.getElementById("gen-sel")
+noUiSlider.create(genSlider, {
+	start: 0,
+	connect: false,
+	range: {
+		'min': 0,
+		'max': 10
+	}
+})
+
+function genSliderSetGen(gen){
+	genSlider.noUiSlider.set(gen)
+}
+
+function genSliderSetNumGen(lgen){
+	genSlider.noUiSlider.updateOptions({
+		range: {
+			min: 0,
+			max: lgen
+		}
+	})
+}
+
+let playing = false;
+setInterval(() => {
+	if(playing){
+		if(cgen < anims.length){
+			let g = cgen+1
+			genSliderSetGen(g)
+			setDrawGeneration(g)
+		}
+		else playing = false;
+	}
+}, 100)
+
+genSlider.noUiSlider.on('slide', () => {
+	playing = false;
+	setDrawGeneration(Math.round(genSlider.noUiSlider.get()))
+})
+
+window.processData = function(){
+	canvas.clear()
+	initDrawer(JSON.parse(document.getElementById("data-input").value))
+	let lgen = anims.length-1
+	genSliderSetNumGen(lgen)
+	genSliderSetGen(lgen)
+	setDrawGeneration(lgen)
+}
+
+window.gensPlayPause = function(){
+	playing = !playing;
+}
+
+    }
+
+var alreadyrunflag = 0;
+
+if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", function(){
+        alreadyrunflag=1; 
+        VanillaRunOnDomReady();
+    }, false);
+else if (document.all && !window.opera) {
+    document.write('<script type="text/javascript" id="contentloadtag" defer="defer" src="javascript:void(0)"><\/script>');
+    var contentloadtag = document.getElementById("contentloadtag")
+    contentloadtag.onreadystatechange=function(){
+        if (this.readyState=="complete"){
+            alreadyrunflag=1;
+            VanillaRunOnDomReady();
+        }
+    }
+}
+
+window.onload = function(){
+  setTimeout("if (!alreadyrunflag){VanillaRunOnDomReady}", 0);
+}
+
+  //]]></script>
+
+</head>
+<body>
+    <div id="controls">
+	<textarea id="data-input" cols="50" rows="2"></textarea>
+	<button id="data-input-process" onClick="processData()">Process</button>
+	<div>
+		<button id="gen-play" onClick="gensPlayPause()">⏯</button>
+		<div id="gen-sel"></div>
+	</div>
+</div>
+<div>
+	<canvas id="best-drawer" width="1024px" height="1024px"></canvas>
+</div>
+</body>
+</html>
