@@ -37,12 +37,24 @@ struct MySolution {
 	}
 
 	json_object* toJSON() const {
-		let json = json_object_new_array();
-		for(let i = 0; i < BOXC; i++){
-			let boxJ = json_object_new_object();
-			json_object_object_add(boxJ, "x", json_object_new_double(boxPX[i]));
-			json_object_object_add(boxJ, "y", json_object_new_double(boxPY[i]));
-			json_object_array_add(json, boxJ);
+		double minX, minY, maxX, maxY;
+		getBB(minX, minY, maxX, maxY);
+		let json = json_object_new_object();
+		{
+			let area = json_object_new_object();
+			json_object_object_add(area, "x", json_object_new_double(maxX - minX));
+			json_object_object_add(area, "y", json_object_new_double(maxY - minY));
+			json_object_object_add(json, "area", area);
+		}
+		{
+			let boxes = json_object_new_array();
+			for(let i = 0; i < BOXC; i++){
+				let boxJ = json_object_new_object();
+				json_object_object_add(boxJ, "x", json_object_new_double(boxPX[i] - minX));
+				json_object_object_add(boxJ, "y", json_object_new_double(boxPY[i] - minY));
+				json_object_array_add(boxes, boxJ);
+			}
+			json_object_object_add(json, "boxes", boxes);
 		}
 		return json;
 	}
