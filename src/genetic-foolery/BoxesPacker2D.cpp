@@ -119,8 +119,8 @@ MySolution mutate(const MySolution& X_base, const std::function<double(void)> &r
 		in_range=true;
 		X_new=X_base;
 		for(let i = 0; i < BOXC; i++){
-			X_new.boxPX[i] += 0.2*(rnd01()-rnd01())*shrink_scale;
-			X_new.boxPY[i] += 0.2*(rnd01()-rnd01())*shrink_scale;
+			X_new.boxPX[i] += (rnd01()-rnd01())*shrink_scale;
+			X_new.boxPY[i] += (rnd01()-rnd01())*shrink_scale;
 			in_range &= X_new.boxPX[i] >= 0 && X_new.boxPX[i] < containerW && X_new.boxPY[i] >= 0 && X_new.boxPY[i] < containerH;
 		}
 	} while(!in_range);
@@ -181,7 +181,7 @@ int main(){
 	ga_obj.idle_delay_us=1; // switch between threads quickly
 	ga_obj.dynamic_threading=true;
 	ga_obj.verbose=false;
-	ga_obj.population=600;
+	ga_obj.population=10000;
 	ga_obj.generation_max=1000;
 	ga_obj.calculate_SO_total_fitness=calculate_SO_total_fitness;
 	ga_obj.init_genes=init_genes;
@@ -190,11 +190,9 @@ int main(){
 	ga_obj.crossover=crossover;
 	ga_obj.SO_report_generation=SO_report_generation;
 	ga_obj.best_stall_max=10;
-	ga_obj.elite_count=10;
-	ga_obj.crossover_fraction=0.7;
-	ga_obj.mutation_rate=0.2;
-	ga_obj.best_stall_max=10;
-	ga_obj.elite_count=10;
+	ga_obj.elite_count=50;
+	ga_obj.crossover_fraction=0.8;
+	ga_obj.mutation_rate=0.95;
 	ga_obj.solve();
 
 	cout<<"The problem is optimized in "<<timer.toc()<<" seconds."<<endl;
