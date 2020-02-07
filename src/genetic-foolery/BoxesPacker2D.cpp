@@ -7,6 +7,8 @@
 
 #include <util/Macros.h>
 
+#include <json-c/json.h>
+
 using std::string;
 using std::cout;
 using std::endl;
@@ -32,6 +34,17 @@ struct MySolution {
 		str += ", boxes: [";
 		for(let i = 0; i < BOXC; i++) str.append((i > 0 ? ", (" : "(") + std::to_string(boxPX[i] - minX) + "," + std::to_string(boxPY[i] - minY) + ")");
 		return str + "] }";
+	}
+
+	json_object* toJSON() const {
+		let json = json_object_new_array();
+		for(let i = 0; i < BOXC; i++){
+			let boxJ = json_object_new_object();
+			json_object_object_add(boxJ, "x", json_object_new_double(boxPX[i]));
+			json_object_object_add(boxJ, "y", json_object_new_double(boxPY[i]));
+			json_object_array_add(json, boxJ);
+		}
+		return json;
 	}
 
 	#define intervalNotOvelap(x1, sx1, x2, sx2) (x2+sx2 < x1 || x1+sx1 < x2)
@@ -121,6 +134,7 @@ double calculate_SO_total_fitness(const GA_Type::thisChromosomeType &X){
 }
 
 std::ofstream output_file;
+json_object* best_arr;
 
 void SO_report_generation(int generation_number, const EA::GenerationType<MySolution,MyMiddleCost> &last_generation, const MySolution& best_genes){
 	cout
@@ -136,9 +150,13 @@ void SO_report_generation(int generation_number, const EA::GenerationType<MySolu
 		<<last_generation.average_cost<<"\t"
 		<<last_generation.best_total_cost<<"\t"
 		<<best_genes.to_string()<<"\n";
+	
+	if(best_arr) json_object_array_add(best_arr, best_genes.toJSON());
 }
 
 int main(){
+	best_arr = json_object_new_array();
+
 	output_file.open("results.txt");
 	output_file<<"step"<<"\t"<<"cost_avg"<<"\t"<<"cost_best"<<"\t"<<"solution_best"<<"\n";
 
@@ -170,5 +188,27 @@ int main(){
 	cout<<"The problem is optimized in "<<timer.toc()<<" seconds."<<endl;
 
 	output_file.close();
+
+	let json = json_object_new_object();
+	json_object_object_add(json, "best_positions", best_arr);
+	{
+		let boxes = json_object_new_array();
+		for(let i = 0; i < BOXC; i++){
+			let box = json_object_new_object();
+			json_object_object_add(box, "x", json_object_new_double(boxSX[i]));
+			json_object_object_add(box, "y", json_object_new_double(boxSY[i]));
+			json_object_array_add(boxes, box);
+		}
+		json_object_object_add(json, "boxes", boxes);
+	}
+	{
+		let container = json_object_new_object();
+		json_object_object_add(container, "x", json_object_new_double(containerW));
+		json_object_object_add(container, "y", json_object_new_double(containerH));
+		json_object_object_add(json, "container", container);
+	}
+	json_object_to_file("report.json", json);
+	json_object_put(json);
+
 	return 0;
 }
