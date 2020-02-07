@@ -114,16 +114,16 @@ bool eval_solution(const MySolution& p, MyMiddleCost &c){
 
 MySolution mutate(const MySolution& X_base, const std::function<double(void)> &rnd01, double shrink_scale){
 	MySolution X_new;
-	bool in_range;
-	do{
-		in_range=true;
+	// bool in_range;
+	// do{
+		// in_range=true;
 		X_new=X_base;
 		for(let i = 0; i < BOXC; i++){
 			X_new.boxPX[i] += (rnd01()-rnd01())*shrink_scale;
 			X_new.boxPY[i] += (rnd01()-rnd01())*shrink_scale;
-			in_range &= X_new.boxPX[i] >= 0 && X_new.boxPX[i] < containerW && X_new.boxPY[i] >= 0 && X_new.boxPY[i] < containerH;
+			// in_range &= X_new.boxPX[i] >= 0 && X_new.boxPX[i] < containerW && X_new.boxPY[i] >= 0 && X_new.boxPY[i] < containerH;
 		}
-	} while(!in_range);
+	// } while(!in_range);
 	return X_new;
 }
 
