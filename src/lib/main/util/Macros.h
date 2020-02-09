@@ -66,6 +66,8 @@ typedef const char* String;
 #define lerp(n, a,b) lerp2(n, 0, 1, a, b)
 #define delerp(n, a,b) lerp2(n, a, b, 0, 1)
 
+#define clamp(n, a, b) min(max(n, a), b)
+
 //Printing
 
 #define printf_fmt(x) _Generic((x), \
