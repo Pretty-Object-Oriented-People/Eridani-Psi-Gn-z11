@@ -43,12 +43,12 @@ String NAMES_Rooms[NUM_Rooms] = {"F1R1", "F1R2", "F1R3", "F2R1", "F2R2", "F2R3",
 
 Professor GroupSubject2Professor[NUM_Groups][NUM_Subjects] = {
 	{5, 0, 3, 1},
-	{5, 4, 4, 2},
-	{4, 2, 4, 1},
+	{5, 0, 4, 2},
+	{4, 0, 4, 2},
 	{5, 0, 3, 2},
-	{4, 1, 2, 1},
+	{4, 1, 2, 2},
 	{5, 1, 3, 2},
-	{5, 1, 3, 1}
+	{4, 1, 3, 1}
 };
 
 int Subject2Duration[NUM_Subjects] = {2, 2, 1, 1};
