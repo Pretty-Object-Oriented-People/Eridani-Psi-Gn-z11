@@ -1,3 +1,4 @@
+#include "GenoFun.hpp"
 // main.cpp
 
 #include <string>
@@ -163,7 +164,7 @@ void SO_report_generation(int generation_number, const EA::GenerationType<MySolu
 	if(best_arr) json_object_array_add(best_arr, best_genes.toJSON());
 }
 
-int main(){
+int BoxesPacker2DRun(){
 	best_arr = json_object_new_array();
 
 	output_file.open("results.txt");
