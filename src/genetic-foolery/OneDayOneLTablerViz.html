@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.20/fabric.js"></script>
+
+    <!--<link rel="stylesheet" type="text/css" href="/css/result-light.css">-->
+
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.4/randomColor.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.0.3/nouislider.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.0.3/nouislider.min.css">
+
+  <style id="compiled-css" type="text/css">
+#data-input {
+	resize: none;
+}
+
+#gen-curr {
+	display: inline-block;
+	width: 3ex;
+	border: 1px dotted grey;
+}
+
+#gen-sel {
+	width: 52ex;
+	height: 1em;
+	margin: 1em;
+	display: inline-block;
+}
+
+.time2subject {
+	border: 4px solid black;
+	display: inline-block;
+}
+
+.time2subject > tr > td {
+	text-align: center;
+	width: 25ex;
+	height: 4em;
+	border: 2px solid grey;
+	border-top: 1px solid darkgrey;
+	border-bottom: 1px solid darkgrey;
+}
+
+.time2subject > tr:first-child > td:first-child {
+	font-size: larger;
+	font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.time2subject > tr:first-child > td {
+	font-weight: bold;
+	border-bottom: 4px solid darkslategrey;
+}
+
+.time2subject > tr > td:first-child {
+	font-weight: bold;
+	border-right: 4px solid darkslategrey;
+}
+  </style>
+
+
+  <!-- TODO: Missing CoffeeScript 2 -->
+
+  <script type="text/javascript">//<![CDATA[
+
+	function clearChildren(parent){
+		while(parent.lastChild) parent.removeChild(parent.lastChild)
+	}
+
+
+    var VanillaRunOnDomReady = function() {
+
+let tG = document.getElementById("groups")
+let tP = document.getElementById("professors")
+let tR = document.getElementById("rooms")
+
+/**
+ * @param {HTMLTableElement} t
+ * @param {Number} h
+ * @param {Number} e
+ * @return {HTMLTableCellElement}
+ */
+function TH2S(t, h, e){ return t.rows[h+1].cells[e+1] }
+function tHG2S(h, g){ return TH2S(tG, h, g) }
+function tHP2S(h, p){ return TH2S(tP, h, p) }
+function tHR2S(h, r){ return TH2S(tR, h, r) }
+
+const dayStartsAt = 12
+let nhours = 0
+let groupNames = []
+let professorNames = []
+let roomNames = []
+let subjectNames = []
+let subjectColors = []
+let gs2p = []
+let anims = []
+let cgen = 0
+function initDrawer(json){
+	nhours = json.hours_in_a_day
+	groupNames = json.groups
+	professorNames = json.professors
+	roomNames = json.rooms
+	subjectNames = json.subjects
+	gs2p = json.group_subject_professors
+	subjectColors = []
+	for(let s in subjectNames) subjectColors.push(randomColor({luminosity: 'light'}))
+	/**
+	 * Regenerates table
+	 * @param {HTMLTableElement} table
+	 * @param {Number} rows
+	 * @param {Number} cols
+	 * @param {function(Number, Number, HTMLTableDataCellElement): void} tdConsumer
+	 */
+	function regenTable(table, rows, cols, tdConsumer){
+		clearChildren(table)
+		tbody = document.createElement("tbody")
+		for(let r = 0; r < rows; r++){
+			let tr = document.createElement("tr")
+			for(let c = 0; c < cols; c++){
+				let td = document.createElement("td")
+				tdConsumer(r, c, td)
+				tr.appendChild(td)
+			}
+			table.appendChild(tr)
+		}
+		table.appendChild(tbody)
+	}
+	function hour2str(h){
+		let time = new Date(null)
+		time.setHours(dayStartsAt + h)
+		return time.toISOString().substr(11, 8);
+	}
+
+	regenTable(tG, nhours+1, groupNames.length+1, (r, c, td) => {
+		if(r == 0 && c == 0) td.textContent = "Groups"
+		else if(c == 0) td.textContent = hour2str(r)
+		else if(r == 0) td.textContent = groupNames[c-1]
+	})
+	regenTable(tP, nhours+1, professorNames.length+1, (r, c, td) => {
+		if(r == 0 && c == 0) td.textContent = "Professors"
+		else if(c == 0) td.textContent = hour2str(r)
+		else if(r == 0) td.textContent = professorNames[c-1]
+	})
+	regenTable(tR, nhours+1, roomNames.length+1, (r, c, td) => {
+		if(r == 0 && c == 0) td.textContent = "Rooms"
+		else if(c == 0) td.textContent = hour2str(r)
+		else if(r == 0) td.textContent = roomNames[c-1]
+	})
+
+	anims = json.best_of_gens
+}
+function setDrawGeneration(gen){
+	if(gen < 0 || gen >= anims.length || cgen === gen) return;
+	cgen = gen
+	document.getElementById("gen-curr").textContent = cgen
+	let frame = anims[cgen]
+	/**
+	 * @param {HTMLTableElement} t
+	 */
+	function resetDisp(t){
+		for(let h = 1; h < t.rows.length; h++){
+			let row = t.rows[h]
+			for(let e = 1; e < row.cells.length; e++){
+				let cell = row.cells[e]
+				cell.innerHTML = ""
+				cell.style.removeProperty("background-color")
+			}
+		}
+	}
+	resetDisp(tG)
+	resetDisp(tP)
+	resetDisp(tR)
+	for(let g = 0; g < groupNames.length; g++) for(let h = 0; h < nhours; h++){
+		let rs = frame.groups_hours[g][h]
+		let r = rs.room
+		let s = rs.subject
+		if(r == -1 || s == -1) continue;
+		let p = gs2p[g][s]
+		{
+			let td = tHG2S(h, g)
+			td.innerHTML = `<b>${subjectNames[s]}</b><br>${professorNames[p]}, <i>${roomNames[r]}</i>`
+			td.style.backgroundColor = subjectColors[s]
+		}
+		{
+			let td = tHP2S(h, p)
+			td.innerHTML = `<b>${groupNames[g]}</b><br>${subjectNames[s]}, <i>${roomNames[r]}</i>`
+			td.style.backgroundColor = subjectColors[s]
+		}
+		{
+			let td = tHR2S(h, r)
+			td.innerHTML = `<b>${groupNames[g]}</b><br>${subjectNames[s]}, <i>${professorNames[p]}</i>`
+			td.style.backgroundColor = subjectColors[s]
+		}
+	}
+}
+
+let genSlider = document.getElementById("gen-sel")
+noUiSlider.create(genSlider, {
+	start: 0,
+	connect: false,
+	range: {
+		'min': 0,
+		'max': 10
+	}
+})
+
+function genSliderSetGen(gen){
+	genSlider.noUiSlider.set(gen)
+}
+
+function genSliderSetNumGen(lgen){
+	genSlider.noUiSlider.updateOptions({
+		range: {
+			min: 0,
+			max: lgen
+		}
+	})
+}
+
+let playing = false;
+setInterval(() => {
+	if(playing){
+		if(cgen < anims.length){
+			let g = cgen+1
+			genSliderSetGen(g)
+			setDrawGeneration(g)
+		}
+		else playing = false;
+	}
+}, 100)
+
+genSlider.noUiSlider.on('slide', () => {
+	playing = false;
+	setDrawGeneration(Math.round(genSlider.noUiSlider.get()))
+})
+
+window.processData = function(){
+	initDrawer(JSON.parse(document.getElementById("data-input").value))
+	let lgen = anims.length-1
+	genSliderSetNumGen(lgen)
+	genSliderSetGen(lgen)
+	setDrawGeneration(lgen)
+}
+
+window.gensPlayPause = function(){
+	playing = !playing;
+}
+
+    }
+
+var alreadyrunflag = 0;
+
+if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", function(){
+        alreadyrunflag=1; 
+        VanillaRunOnDomReady();
+    }, false);
+else if (document.all && !window.opera) {
+    document.write('<script type="text/javascript" id="contentloadtag" defer="defer" src="javascript:void(0)"><\/script>');
+    var contentloadtag = document.getElementById("contentloadtag")
+    contentloadtag.onreadystatechange=function(){
+        if (this.readyState=="complete"){
+            alreadyrunflag=1;
+            VanillaRunOnDomReady();
+        }
+    }
+}
+
+window.onload = function(){
+  setTimeout("if (!alreadyrunflag){VanillaRunOnDomReady}", 0);
+}
+
+  //]]></script>
+
+</head>
+<body>
+<div id="controls">
+	<textarea id="data-input" cols="50" rows="2"></textarea>
+	<button id="data-input-process" onClick="processData()">Process</button>
+	<div>
+		<button id="gen-play" onClick="gensPlayPause()">⏯</button>
+		<span id=gen-curr></span>
+		<div id="gen-sel"></div>
+	</div>
+</div>
+<div id="display">
+	<table id="groups" class="time2subject"></table>
+	<table id="professors" class="time2subject"></table>
+	<table id="rooms" class="time2subject"></table>
+</div>
+</body>
+</html>
