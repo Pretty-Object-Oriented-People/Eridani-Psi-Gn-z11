@@ -103,8 +103,13 @@ typedef EA::GenerationType<DayTimetable,IntermediateCost> Generation_Type;
 #define RND_Room() RAND_Room(rnd01(), std::floor)
 #define RND_Hour() RAND_Hour(rnd01(), std::floor)
 
+#define INIT_MAX_TRIES 1E8
+std::function<void(void)> requestStop;
+bool userStopRequested = false;
+
 void init_genes(DayTimetable& timetable, const std::function<double(void)> &rnd01){
 	timetable.init(); //Everything empty
+	if(userStopRequested) return;
 	bool RoomHour2Occupancy[NUM_Rooms][NUM_Hours] = {};
 	bool ProfessorHour2Occupancy[NUM_Professors][NUM_Hours] = {};
 	FOR_Group(g){
@@ -113,7 +118,14 @@ void init_genes(DayTimetable& timetable, const std::function<double(void)> &rnd0
 			for(let hn = 0; hn < Subject2Duration[s]; hn++){
 				HourOfDay h;
 				Room r;
+				long tries = 0;
 				while(true){
+					if(userStopRequested) return;
+					if(tries++ == INIT_MAX_TRIES){
+						cout << "Could not initialize genes after ludicrous number of tries - solution impossible" << endl;
+						requestStop();
+						return;
+					}
 					h = RND_Hour();
 					if(timetable.GroupHour2Subject[g][h] != Subject_None) continue;
 					if(ProfessorHour2Occupancy[p][h]) continue;
@@ -131,6 +143,7 @@ void init_genes(DayTimetable& timetable, const std::function<double(void)> &rnd0
 }
 
 bool eval_solution(const DayTimetable& timetable, IntermediateCost &c){
+	if(userStopRequested) return true;
 	if(!timetable.isValid()) return false; //Avoid extra computations if solution is invalid
 	c.avgDayLength = timetable.averageDayLength();
 	return true;
@@ -140,6 +153,7 @@ bool eval_solution(const DayTimetable& timetable, IntermediateCost &c){
 #define MAX_NUM_Mutations (NUM_Rooms*NUM_Hours)
 
 DayTimetable mutate(const DayTimetable& X_base, const std::function<double(void)> &rnd01, double shrink_scale){
+	if(userStopRequested) return X_base;
 	DayTimetable X_new;
 	long tries = 0;
 	do {
@@ -185,6 +199,7 @@ DayTimetable mutate(const DayTimetable& X_base, const std::function<double(void)
 #define CROSSOVER_MAX_TRIES 1E6
 
 DayTimetable crossover(const DayTimetable& X1, const DayTimetable& X2, const std::function<double(void)> &rnd01){
+	if(userStopRequested) return X1;
 	DayTimetable X_new;
 	long tries = 0;
 	do {
@@ -268,6 +283,10 @@ int OneDayOneLTablerRun(){
 	ga_obj.elite_count=50;
 	ga_obj.crossover_fraction=0.2;
 	ga_obj.mutation_rate=0.6;
+	requestStop = [&ga_obj](){
+		userStopRequested = true;
+		ga_obj.user_request_stop = true;
+	};
 	ga_obj.solve();
 
 	cout<<"The problem is optimized in "<<timer.toc()<<" seconds."<<std::endl;
