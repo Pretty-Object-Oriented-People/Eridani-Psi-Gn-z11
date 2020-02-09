@@ -1,3 +1,6 @@
+#pragma once
 
 int BoxesPacker2DRun();
-int OneDayOneLTablerRun();
+namespace ODOLT {
+	int OneDayOneLTablerRun();
+}

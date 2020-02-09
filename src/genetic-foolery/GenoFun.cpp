@@ -1,5 +1,5 @@
 #include "GenoFun.hpp"
 
 int main(){
-	return OneDayOneLTablerRun();
+	return ODOLT::OneDayOneLTablerRun();
 }

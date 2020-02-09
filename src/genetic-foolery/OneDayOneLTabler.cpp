@@ -7,6 +7,8 @@
 
 #include "OneDayOneLTablerHPars.h"
 
+namespace ODOLT {
+
 using std::string;
 using std::cout;
 using std::endl;
@@ -342,4 +344,6 @@ int OneDayOneLTablerRun(){
 	json_object_put(json);
 
 	return 0;
+}
+
 }
