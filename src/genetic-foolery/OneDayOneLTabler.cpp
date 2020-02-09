@@ -259,7 +259,33 @@ void SO_report_generation(int generation_number, const EA::GenerationType<DayTim
 	if(odolt_best_arr) json_object_array_add(odolt_best_arr, best_genes.toJSON());
 }
 
+bool checkHyperParams(){
+	{
+		int tsd = 0;
+		FOR_Subject(s) tsd += Subject2Duration[s];
+		if(tsd > NUM_Hours){
+			cout << "Total subject duration is more than hours in a day" << endl;
+			return false;
+		}
+		if(tsd * NUM_Groups > NUM_Rooms*NUM_Hours){
+			cout << "More group-hours are requested than available room-hours" << endl;
+			return false;
+		}
+	}
+	{
+		int tph[NUM_Professors] = {};
+		FOR_Group(g) FOR_Subject(s) tph[GroupSubject2Professor[g][s]] += Subject2Duration[s];
+		FOR_Professor(p) if(tph[p] > NUM_Hours){
+			cout << "Total work hours for " << NAMES_Professors[p] << " is more than hours in a day" << endl;
+			return false;
+		}
+	}
+	return true;
+}
+
 int OneDayOneLTablerRun(){
+	if(!checkHyperParams()) return 1;
+
 	odolt_best_arr = json_object_new_array();
 
 	odolt_output_file.open("odoltabler-results.txt");
