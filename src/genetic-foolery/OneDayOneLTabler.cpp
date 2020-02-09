@@ -5,9 +5,9 @@
 #include <openga/openga.hpp>
 #include <json-c/json.h>
 
-#include "OneDayOneLTablerHPars.h"
-
 namespace ODOLT {
+
+#include "OneDayOneLTablerHPars.h"
 
 using std::string;
 using std::cout;

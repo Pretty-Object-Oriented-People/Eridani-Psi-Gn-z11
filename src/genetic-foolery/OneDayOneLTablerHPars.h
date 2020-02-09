@@ -2,10 +2,6 @@
 
 #include <util/Macros.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef int Professor;
 typedef int Subject;
 typedef int Group;
@@ -52,7 +48,3 @@ Professor GroupSubject2Professor[NUM_Groups][NUM_Subjects] = {
 };
 
 int Subject2Duration[NUM_Subjects] = {2, 2, 1, 1};
-
-#ifdef __cplusplus
-}
-#endif
