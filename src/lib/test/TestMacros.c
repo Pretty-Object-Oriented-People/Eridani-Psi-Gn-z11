@@ -17,6 +17,12 @@ testBegin(testMacros)
 	assertNumFEqual(1.2, absm(1.2));
 	assertNumFEqual(1.2, absm(-1.2));
 
+	assertNumFEqual(0.5, clamp(0.5, 0, 1));
+	assertNumFEqual(0, clamp(0, 0, 1));
+	assertNumFEqual(1, clamp(1, 0, 1));
+	assertNumFEqual(0, clamp(-1, 0, 1));
+	assertNumFEqual(1, clamp(5, 0, 1));
+
 	double a = 10.0;
 	double b = 1.2E-1;
 	double c = a, d = b; //Optimization bypass
