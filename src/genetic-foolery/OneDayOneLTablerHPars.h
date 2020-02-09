@@ -15,7 +15,7 @@ typedef int HourOfDay;
 #define NUM_Professors 6
 #define NUM_Subjects 4
 #define NUM_Groups 7
-#define NUM_Rooms 10
+#define NUM_Rooms 12
 #define NUM_Hours 8
 
 #define Professor_None -1
@@ -39,7 +39,7 @@ typedef int HourOfDay;
 String NAMES_Professors[NUM_Professors] = {"John Wick", "Ice Bear", "Mr Potato", "H.P. Lovecraft", "Godzilla", "Dumbledore"};
 String NAMES_Subjects[NUM_Subjects] = {"Wizardry", "Gun Practice", "Fun Geometry", "Cooking"};
 String NAMES_Groups[NUM_Groups] = {"Potheads", "Chillheads", "Rawheads", "Drunkheads", "Funheads", "Numbheads", "Trampheads"};
-String NAMES_Rooms[NUM_Rooms] = {"F1R1", "F1R2", "F1R3", "F2R1", "F2R2", "F2R3", "F3R1", "F3R2", "F3R3", "Basement"};
+String NAMES_Rooms[NUM_Rooms] = {"F1R1", "F1R2", "F1R3", "F2R1", "F2R2", "F2R3", "F3R1", "F3R2", "F3R3", "Basement", "Rooftop", "Garden"};
 
 Professor GroupSubject2Professor[NUM_Groups][NUM_Subjects] = {
 	{5, 0, 3, 1},
