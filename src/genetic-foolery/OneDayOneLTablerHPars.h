@@ -47,4 +47,4 @@ Professor GroupSubject2Professor[NUM_Groups][NUM_Subjects] = {
 	{4, 1, 3, 1}
 };
 
-int Subject2Duration[NUM_Subjects] = {2, 2, 1, 1};
+int Subject2Duration[NUM_Subjects] = {1, 1, 0, 1};
