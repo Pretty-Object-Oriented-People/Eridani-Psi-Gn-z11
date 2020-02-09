@@ -103,11 +103,18 @@ typedef EA::GenerationType<DayTimetable,IntermediateCost> Generation_Type;
 #define RND_Room() RAND_Room(rnd01(), std::floor)
 #define RND_Hour() RAND_Hour(rnd01(), std::floor)
 
-#define INIT_MAX_TRIES (NUM_Hours*NUM_Rooms*NUM_Hours*NUM_Rooms)
+#define INIT_MAX_TRIES 1E6
+#define INIT_MAX_TRIES_LOCAL (NUM_Hours*NUM_Rooms)
 std::function<void(void)> requestStop;
 bool userStopRequested = false;
 
 void init_genes(DayTimetable& timetable, const std::function<double(void)> &rnd01){
+	long tries = 0;
+	retry: if(tries++ == INIT_MAX_TRIES){
+		cout << "Could not initialize genes after ludicrous number of tries - solution impossible" << endl;
+		requestStop();
+		return;
+	}
 	timetable.init(); //Everything empty
 	if(userStopRequested) return;
 	bool RoomHour2Occupancy[NUM_Rooms][NUM_Hours] = {};
@@ -118,14 +125,10 @@ void init_genes(DayTimetable& timetable, const std::function<double(void)> &rnd0
 			for(let hn = 0; hn < Subject2Duration[s]; hn++){
 				HourOfDay h;
 				Room r;
-				long tries = 0;
+				long ltries = 0;
 				while(true){
 					if(userStopRequested) return;
-					if(tries++ == INIT_MAX_TRIES){
-						cout << "Could not initialize genes after sufficient number of tries - solution impossible" << endl;
-						requestStop();
-						return;
-					}
+					if(ltries++ == INIT_MAX_TRIES_LOCAL) goto retry;
 					h = RND_Hour();
 					if(timetable.GroupHour2Subject[g][h] != Subject_None) continue;
 					if(ProfessorHour2Occupancy[p][h]) continue;
