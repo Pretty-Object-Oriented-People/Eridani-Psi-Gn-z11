@@ -103,7 +103,7 @@ typedef EA::GenerationType<DayTimetable,IntermediateCost> Generation_Type;
 #define RND_Room() RAND_Room(rnd01(), std::floor)
 #define RND_Hour() RAND_Hour(rnd01(), std::floor)
 
-#define INIT_MAX_TRIES 1E8
+#define INIT_MAX_TRIES (NUM_Hours*NUM_Rooms*NUM_Hours*NUM_Rooms)
 std::function<void(void)> requestStop;
 bool userStopRequested = false;
 
@@ -122,7 +122,7 @@ void init_genes(DayTimetable& timetable, const std::function<double(void)> &rnd0
 				while(true){
 					if(userStopRequested) return;
 					if(tries++ == INIT_MAX_TRIES){
-						cout << "Could not initialize genes after ludicrous number of tries - solution impossible" << endl;
+						cout << "Could not initialize genes after sufficient number of tries - solution impossible" << endl;
 						requestStop();
 						return;
 					}
