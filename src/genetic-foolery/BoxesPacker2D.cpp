@@ -215,7 +215,7 @@ int BoxesPacker2DRun(){
 		json_object_object_add(container, "y", json_object_new_double(containerH));
 		json_object_object_add(json, "container", container);
 	}
-	json_object_to_file("report.json", json);
+	json_object_to_file("report-odolt.json", json);
 	json_object_put(json);
 
 	return 0;
