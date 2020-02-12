@@ -369,7 +369,7 @@ int OneDayOneLTablerMultiRun(){
 	ga_obj.mutate=mutate;
 	ga_obj.crossover=crossover;
 	ga_obj.MO_report_generation=MO_report_generation;
-	ga_obj.best_stall_max=8;
+	ga_obj.best_stall_max=10;
 	ga_obj.elite_count=10;
 	ga_obj.crossover_fraction=0.2;
 	ga_obj.mutation_rate=0.6;
