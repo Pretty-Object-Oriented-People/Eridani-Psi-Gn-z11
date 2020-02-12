@@ -361,7 +361,7 @@ int OneDayOneLTablerMultiRun(){
 	ga_obj.idle_delay_us=10; // switch between threads quickly
 	ga_obj.dynamic_threading=true;
 	ga_obj.verbose=false;
-	ga_obj.population=200;
+	ga_obj.population=500;
 	ga_obj.generation_max=1000;
 	ga_obj.calculate_MO_objectives=calculate_MO_objectives;
 	ga_obj.init_genes=init_genes;
@@ -369,7 +369,7 @@ int OneDayOneLTablerMultiRun(){
 	ga_obj.mutate=mutate;
 	ga_obj.crossover=crossover;
 	ga_obj.MO_report_generation=MO_report_generation;
-	ga_obj.best_stall_max=5;
+	ga_obj.best_stall_max=8;
 	ga_obj.elite_count=10;
 	ga_obj.crossover_fraction=0.2;
 	ga_obj.mutation_rate=0.6;
